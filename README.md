@@ -1,17 +1,17 @@
 # Cybersecurity RAG Assistant
 
-A local, offline cybersecurity intelligence tool combining semantic search, large language models, and expert-curated datasets (MITRE CWE + DISA STIGs).
+The goal is to create a cybersecurity tool that users can use to ask any range of cybersecurity questions from offensive to defensive by combining semantic search, large language models, and expert-curated datasets (MITRE CWE + DISA STIGs).
 
-Built and refined from the ground up using raw PDF reports, custom labeling, and natural language processing — this project blends traditional machine learning, modern RAG techniques, and the reality of working with unstructured, noisy cybersecurity data.
+Built from using scraped PDF reports of penetration test reports, custom labeling, natural language processing, and modern RAG techniques, and the reality of working with unstructured cybersecurity data.
 
 ---
 
 ## Overview
 
-This project allows users to ask cybersecurity questions in natural language and receive grounded, actionable responses based on structured data from trusted sources. It does this entirely offline using:
+This project allows users to ask cybersecurity questions in natural language and receive human-like responses based on structured data from trusted sources. It does this entirely offline using:
 
 - A FAISS vector store over MITRE CWE and DISA STIG content
-- Sentence embeddings from `all-mpnet-base-v2`
+- Sentence embeddings from `all-mpnet-base-v2`. Chosen for its reasonable size, works on limited hardware, semantic speciality, and proficient retrieval and ranking tasks.
 - A locally hosted LLM (`mistral-7b-instruct`) served via LM Studio
 - A command-line querying interface for security researchers and analysts
 
@@ -144,6 +144,8 @@ pentest_nlp_project/
 
 - Support adding more data from STIGs and MITRE
 - Reinstate attack phase labeling from legacy classifier
+- Integrate more offensive security, find data sets that would match the criteria
+- Introduce more "memory"
 
 ---
 
@@ -174,6 +176,11 @@ Each entry consists of:
 - `text`: Paragraph from the report
 - `label`: Category (e.g., `Credential Access - Token Misuse Risk`)
 
+---
+
+## Image of Data Distribution
+![img.png](img.png)
+This was the "better" version, but even then it was still unbalanced.
 ---
 
 ## ML Pipeline

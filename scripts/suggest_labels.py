@@ -1,5 +1,7 @@
 import re
 import pandas as pd
+import argparse
+from pathlib import Path
 
 # Keyword-based categories
 LABEL_KEYWORDS = {
@@ -101,8 +103,8 @@ def extract_paragraphs(filename, target_sentences=3):
     return pd.DataFrame(paragraphs)
 
 def main():
-    import argparse
-    from pathlib import Path
+
+
     parser = argparse.ArgumentParser()
     parser.add_argument("input_txt", help="Path to the input .txt report")
     parser.add_argument("output_csv", help="Path to save the labeled CSV")

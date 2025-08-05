@@ -1,9 +1,20 @@
+# Author: Sean Sjahrial
+# Title: Cybersecurity RAG Assistant – MITRE CSV to JSONL Converter (Legacy)
+# Description: Converts cleaned MITRE CWE CSV data into a RAG-compatible JSONL format.
+# GitHub: https://github.com/isnakie
+# License: MIT
+
+# ------------------------------------------------------------------------------
+# This script reads a cleaned MITRE CWE Top 25 CSV file and transforms it into
+# a structured `.jsonl` format suitable for RAG-style semantic search and FAISS indexing.
+# Fields are combined into a single text block under the "content" key.
+# ------------------------------------------------------------------------------
+
 import pandas as pd
 import json
 import os
 
-# Load your cleaned MITRE CWE CSV
-
+# --- Paths ---
 input_csv = "data/cyber_threats/mitre_cwe_clean.csv"
 output_jsonl = "data/cyber_threats/mitre_cwe_knowledge_base.jsonl"
 os.makedirs(os.path.dirname(output_jsonl), exist_ok=True)
@@ -13,6 +24,7 @@ def csv_to_rag_jsonl(input_csv, output_jsonl):
     documents = []
 
     for _, row in df.iterrows():
+        # Extract and structure important fields
         content_parts = [
             f"CWE-ID: {row.get('CWE-ID', '')}",
             f"Name: {row.get('Name', '')}",
@@ -35,11 +47,12 @@ def csv_to_rag_jsonl(input_csv, output_jsonl):
             }
         })
 
+    # Save as JSON Lines format
     with open(output_jsonl, "w", encoding="utf-8") as f:
         for doc in documents:
             f.write(json.dumps(doc, ensure_ascii=False) + "\n")
 
-    print(f"✅ Saved {len(documents)} RAG-ready entries to {output_jsonl}")
+    print(f":: Saved {len(documents)} MITRE entries to {output_jsonl}")
 
 if __name__ == "__main__":
     csv_to_rag_jsonl(input_csv, output_jsonl)
