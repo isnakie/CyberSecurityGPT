@@ -1,0 +1,17 @@
+{
+    "0": "Background Information",
+    "1": "Credential Access",
+    "2": "Crypto Misuse",
+    "3": "Discovery",
+    "4": "Exploitation",
+    "5": "Formatting",
+    "6": "Implementation Flaw",
+    "7": "Information Disclosure",
+    "8": "Operational TTPs",
+    "9": "Policy",
+    "10": "Post - Exploitation",
+    "11": "Privilege Escalation",
+    "12": "Support - Recommendation",
+    "13": "Support - Tool Reference",
+    "14": "Vulnerability - Known CVE"
+}

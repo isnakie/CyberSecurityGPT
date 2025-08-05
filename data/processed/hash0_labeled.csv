@@ -1,0 +1,18 @@
+text,label
+The salts are generated with Math.random(). This is insecure. Salts must be generated with a CSPRNG.,Crypto Misuse
+Only 100 iterations of PBKDF2 are used when deriving the encryption password. This low value was explicitly chosen for performance reasons.,Crypto Misuse
+The SJCL decrypt() function will throw an exception if the key is wrong or data is tampered. Hash0 does not handle this and crashes.,Insecure Error Handling
+The encryption password is derived from the master password with a constant salt.,Sensitive Data Exposure
+The code to prompt the user if they want to migrate always runs due to a logic bug. Not a security issue.,Not Relevant
+"If the Storage Provider URL is empty, an empty salt is used without warning.",Sensitive Data Exposure
+The HMAC key used during password derivation is a hex-encoded string.,Crypto Misuse
+"The salt passed to PBKDF2 is a hex string, which is suboptimal.",Crypto Misuse
+"The password is shown to the user before settings are uploaded, allowing reuse in case of failure.",Sensitive Data Exposure
+"Due to a race condition, a password could be inserted into the wrong browser tab.",Logic Flaw / TOCTTOU
+Hash0 could benefit from unit tests of critical functions.,General Risk Observation
+Using PBKDF2 then HMAC is unnecessary; better to encode in the PBKDF2 salt directly.,Crypto Misuse
+"Hash0 derives another 'encryption password' from the main password, rather than using a binary key.",Crypto Misuse
+Passwordmaker uses charAt() which could be exploited in a side-channel attack.,Side Channel Vulnerability
+"Pages could lie about their URL, tricking the app into giving a password to the wrong domain.",Logic Flaw / Trust Boundary
+The encryption key is derived from the master key with a fixed salt; more secure design needed.,Sensitive Data Exposure
+"The Storage Provider could replay old ciphertext, leading to password reuse or rollback.",State Replay Attack
