@@ -19,6 +19,20 @@ The goal is to reduce noise, increase technical relevance, and answer questions 
 
 ---
 
+## Usage
+
+```
+# To query FAISS
+python scripts/query/query_faiss_index.py
+
+# To query with LM Studio 
+# (Requires instance of local model running, reachable at http://127.0.0.1:1234)
+python .\scripts\query\query_with_lm_studio.py
+```
+
+
+---
+
 ## System Flow
 
 ```
@@ -146,6 +160,7 @@ pentest_nlp_project/
 - Reinstate attack phase labeling from legacy classifier
 - Integrate more offensive security, find data sets that would match the criteria
 - Introduce more "memory"
+- Improve or find an adequate report parser to be to pull data at large scale.
 
 ---
 
