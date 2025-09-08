@@ -19,6 +19,12 @@ The goal is to reduce noise, increase technical relevance, and answer questions 
 
 ---
 
+## Security Features to-do
+
+Include a pipeline which automates security checks of dependencies to make sure all libraries are up-to-date
+
+---
+
 ## Usage
 
 ```
